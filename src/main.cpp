@@ -168,7 +168,7 @@ int main(int argc, char** argv)
 	}
 
 	// Pools
-	int pool;
+	int pool = 0;
 
 	for( int i = 0; i < ROW_NUMBER; ++i)
 	{
@@ -192,6 +192,7 @@ int main(int argc, char** argv)
 		{
 			SubRow* sr = r->subRows[j];
 			int x = sr->x;
+			cerr << x << endl;
 			//cerr << "servers : "<<sr->servers.size() << endl;
 			for( int k = 0; k < sr->servers.size(); ++k)
 			{
