@@ -30,7 +30,7 @@ struct SubRow
 	Row* row;
 	vector<Server*> servers;
 
-	SubRow(int fsize, int fx = 0):size(fsize),x(fx){}
+	SubRow(int fsize, int fx = 0):size(fsize),available(fsize),x(fx){}
 
 	static bool compare (SubRow* sb1, SubRow* sb2) { return (sb1->available < sb2->available); }
 
@@ -84,8 +84,12 @@ struct Row
 int serv_alloc(Server* server, SubRow* subrow)
 {
 	if (server->size > subrow->available)
-		cerr << "<ERR: Can't allocate a server in a smaller subrow." << endl; return -1;
+	{
+		cerr << "<ERR: Can't allocate a server in a smaller subrow. (server:"<<
+			server->size << " subrow:" << subrow->available << endl;
+		return -1;
 
+	}
 	subrow->servers.push_back(server);
 	subrow->available -= server->size;
 
@@ -135,6 +139,16 @@ int main(int argc, char** argv)
 	// vector<Row> rows;
 	vector<SubRow*> subrows = vector<SubRow*>();
 
+	for( int i = 0; i < ROW_NUMBER; ++i)
+	{
+		Row* r = rows[i];
+		for(int j = 0; j < r->subRows.size(); ++j)
+		{
+			SubRow* sr = r->subRows[j];
+			subrows.push_back(sr);
+		}
+	}
+
 	sort(subrows.begin(), subrows.end(), SubRow::compare);
 
 	sort(servers.begin(), servers.end(), Server::compare);
@@ -143,6 +157,7 @@ int main(int argc, char** argv)
 	{
 		for (int j = 0; j < subrows.size(); j++)
 		{
+			//cerr << "subrow" << endl;
 			if (servers[i]->size <= subrows[j]->size)
 			{
 				if (serv_alloc(servers[i], subrows[j]) == 0)
@@ -161,6 +176,7 @@ int main(int argc, char** argv)
 		for(int j = 0; j < r->subRows.size(); ++j)
 		{
 			SubRow* sr = r->subRows[j];
+			//cerr << sr->servers.size() << endl;
 			for( int k = 0; k < sr->servers.size(); ++k)
 			{
 				sr->servers[k]->pool = pool++;
@@ -176,9 +192,12 @@ int main(int argc, char** argv)
 		{
 			SubRow* sr = r->subRows[j];
 			int x = sr->x;
+			//cerr << "servers : "<<sr->servers.size() << endl;
 			for( int k = 0; k < sr->servers.size(); ++k)
 			{
-				cout << r->id << " " << endl;
+				Server* s = sr->servers[k];
+				cout << r->id << " " << x << " " << s->pool << endl;
+				x += s->size;
 			}
 		}
 	}
