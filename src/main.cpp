@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ struct Server
 	Server( int s = 1, int c = 1):size(s),capacity(c)
 	{}
 
-	bool compare (Server s1, Server s2) { return (s1.score() < s2.score()); }
+	static bool compare (Server s1, Server s2) { return (s1.score() < s2.score()); }
 };
 
 struct SubRow
@@ -30,7 +31,7 @@ struct SubRow
 
 	SubRow(int fsize, int fx = 0):size(fsize),x(fx){}
 
-	bool compare (SubRow sb1, SubRow sb2) { return (sb1.available < sb2.available); }
+	static bool compare (SubRow sb1, SubRow sb2) { return (sb1.available < sb2.available); }
 };
 
 struct Row
@@ -81,17 +82,29 @@ int main(int argc, char** argv)
 	/*for( int i = 0; i < U; ++i){
 
 	}*/
-	Row r(2);
+	const int ROW_SIZE = S, ROW_NUMBER = R, SERVER_NUMBER = M,
+				UNAVAILABLE_NUMBER = U, POOL_NUMBER = P;
 
-	const int ROW_SIZE = S, ROW_NUMBER = R, SERVER_NUMBER = M;
+	Row * rows[ROW_NUMBER];
+	for( int i = 0; i < ROW_NUMBER; ++i)
+	{
+		rows[i] = new Row(S);
+	}
+
+	for( int i = 0; i < UNAVAILABLE_NUMBER; ++i)
+	{
+		int ri,si;
+		cin >> ri >> si;
+		rows[ri]->disableSlot(si);
+	}
 
 	vector<Server> servers = vector<Server>();
 
-	vector<Server>[ROW_SIZE] available_servers;
+	vector<Server> available_servers[ROW_SIZE];
 	// vector<Row> rows;
 	vector<SubRow> subrows = vector<SubRow>();
 
-	sort(subrows.begin(), subrows.end(), SubRows::compare);
+	sort(subrows.begin(), subrows.end(), SubRow::compare);
 
 	sort(servers.begin(), servers.end(), Server::compare);
 
