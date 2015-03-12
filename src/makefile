@@ -1,2 +1,2 @@
 all:
-	g++ main.cpp -o exe
+	g++ main.cpp -o hash
