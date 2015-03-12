@@ -1,2 +1,0 @@
-make
-./hash < dc.in
