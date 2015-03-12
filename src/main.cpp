@@ -135,7 +135,7 @@ int main(int argc, char** argv)
 
 	sort(servers.begin(), servers.end(), Server::compare);
 
-	/*for (vector<Server>::iterator it_serv = servers.begin(); it_serv != servers.end(); it_serv++)
+	for (vector<Server>::iterator it_serv = servers.begin(); it_serv != servers.end(); it_serv++)
 	{
 		for (vector<SubRow>::iterator it_subr = subrows.begin(); it_subr != subrows.end(); it_subr++)
 		{
@@ -152,16 +152,16 @@ int main(int argc, char** argv)
 	{
 		for (int j = 0; j < subrows.size(); j++)
 		{
-			if (servers[i].size == subrows[j].size)
+			if (servers[i].size <= subrows[j].size)
 			{
 				if (serv_alloc(servers.[i], subrows.[j]) == 0)
 					subrows.erase(subrows.[j]);
 				break;
 			}
 		}
-	}*/
+	}
 
-
+	
 
 	return 0;
 }
