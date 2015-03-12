@@ -4,7 +4,10 @@
 
 using namespace std;
 
-struct Server {
+struct Row;
+
+struct Server
+{
 	int size, capacity;
 	double score()
 	{
@@ -13,6 +16,19 @@ struct Server {
 
 	Server( int s = 1, int c = 1):size(s),capacity(c)
 	{}
+};
+
+struct SubRow
+{
+	int size;
+	int available;
+	Row* row;
+	vector<Server*> servers;
+};
+
+struct Row
+{
+	vector<SubRow> subRows;
 };
 
 int main(int argc, char** argv)
