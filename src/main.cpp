@@ -61,6 +61,18 @@ struct Row
 	}
 };
 
+int serv_alloc(Server* server, SubRow* subrow)
+{
+	if (server->size > subrow->available)
+		cerr << "<ERR: Can't allocate a server in a smaller subrow." << endl; return -1;
+
+	subrow->servers.insert(server);
+	subrow-> available -= server->size;
+
+	// Returns 0 if the subrow is full
+	return subrow->available;
+}
+
 int main(int argc, char** argv)
 {
 	int R,S,U,P,M;
@@ -83,9 +95,16 @@ int main(int argc, char** argv)
 
 	sort(servers.begin(), servers.end(), Server::compare);
 
-	for ()
+	for (vector<Server>::iterator it_serv = servers.begin(); it_serv != servers.end(); it_serv++)
 	{
-		
+		for (vector<SubRow>::iterator it_subr = subrows.begin(); it_subr != subrows.end(); it_subr++)
+		{
+			if (it_serv->size == it_subr->size)
+			{
+				if (serv_alloc(it_serv, it_subr) == 0)
+					subrows.erase(it_subr);
+			}
+		}
 	}
 
 	return 0;
