@@ -83,14 +83,14 @@ struct Row
 
 int serv_alloc(Server* server, SubRow* subrow)
 {
-	/*if (server->size > subrow->available)
+	if (server->size > subrow->available)
 		cerr << "<ERR: Can't allocate a server in a smaller subrow." << endl; return -1;
 
 	subrow->servers.push_back(server);
 	subrow->available -= server->size;
 
 	// Returns 0 if the subrow is full
-	return subrow->available;*/
+	return subrow->available;
 }
 
 int main(int argc, char** argv)
@@ -138,12 +138,12 @@ int main(int argc, char** argv)
 	sort(subrows.begin(), subrows.end(), SubRow::compare);
 
 	sort(servers.begin(), servers.end(), Server::compare);
-	
+
 	for (int i = 0; i < servers.size(); i++)
 	{
 		for (int j = 0; j < subrows.size(); j++)
 		{
-			if (servers[i]->size == subrows[j]->size)
+			if (servers[i]->size <= subrows[j]->size)
 			{
 				if (serv_alloc(servers[i], subrows[j]) == 0)
 					subrows.erase(subrows.begin()+j);
