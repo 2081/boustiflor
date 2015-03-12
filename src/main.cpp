@@ -19,7 +19,7 @@ struct Server
 	Server( int s = 1, int c = 1):size(s),capacity(c)
 	{}
 
-	static bool compare (Server s1, Server s2) { return (s1.score() < s2.score()); }
+	static bool compare (Server* s1, Server* s2) { return (s1->score() < s2->score()); }
 };
 
 struct SubRow
@@ -32,7 +32,7 @@ struct SubRow
 
 	SubRow(int fsize, int fx = 0):size(fsize),x(fx){}
 
-	static bool compare (SubRow sb1, SubRow sb2) { return (sb1.available < sb2.available); }
+	static bool compare (SubRow* sb1, SubRow* sb2) { return (sb1->available < sb2->available); }
 
 	void print()
 	{
@@ -86,8 +86,8 @@ int serv_alloc(Server* server, SubRow* subrow)
 	/*if (server->size > subrow->available)
 		cerr << "<ERR: Can't allocate a server in a smaller subrow." << endl; return -1;
 
-	subrow->servers.insert(server);
-	subrow-> available -= server->size;
+	subrow->servers.push_back(server);
+	subrow->available -= server->size;
 
 	// Returns 0 if the subrow is full
 	return subrow->available;*/
@@ -130,26 +130,28 @@ int main(int argc, char** argv)
 	}
 
 
-	/*vector<Server> available_servers[ROW_SIZE];
+	vector<Server*> available_servers[ROW_SIZE];
+
 	// vector<Row> rows;
-	vector<SubRow> subrows = vector<SubRow>();
+	vector<SubRow*> subrows = vector<SubRow*>();
 
 	sort(subrows.begin(), subrows.end(), SubRow::compare);
 
 	sort(servers.begin(), servers.end(), Server::compare);
-
-	for (vector<Server>::iterator it_serv = servers.begin(); it_serv != servers.end(); it_serv++)
+	
+	for (int i = 0; i < servers.size(); i++)
 	{
-		for (vector<SubRow>::iterator it_subr = subrows.begin(); it_subr != subrows.end(); it_subr++)
+		for (int j = 0; j < subrows.size(); j++)
 		{
-			if (it_serv->size == it_subr->size)
+			if (servers[i]->size == subrows[j]->size)
 			{
-				if (serv_alloc(it_serv, it_subr) == 0)
-					subrows.erase(it_subr);
+				if (serv_alloc(servers[i], subrows[j]) == 0)
+					subrows.erase(subrows.begin()+j);
+				break;
 			}
 		}
 	}
-*/
+
 	// Pools
 	int pool;
 
