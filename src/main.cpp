@@ -32,6 +32,12 @@ struct SubRow
 	SubRow(int fsize, int fx = 0):size(fsize),x(fx){}
 
 	static bool compare (SubRow sb1, SubRow sb2) { return (sb1.available < sb2.available); }
+
+	void print()
+	{
+		cerr << "(" << x << " [" << size << 
+			"] " << x+size-1 << ")";
+	}
 };
 
 struct Row
@@ -59,6 +65,16 @@ struct Row
 				subRows.insert(subRows.begin()+i, new SubRow( size - s2 -1, xx));
 			}
 		}
+	}
+
+	void print()
+	{
+		for(int i = 0; i < subRows.size(); ++i)
+		{
+			cerr <<  " | ";
+			subRows[i]->print();
+		}
+		cerr << endl;
 	}
 };
 
@@ -91,11 +107,13 @@ int main(int argc, char** argv)
 		rows[i] = new Row(S);
 	}
 
+	// Disabling unavailable slots
 	for( int i = 0; i < UNAVAILABLE_NUMBER; ++i)
 	{
 		int ri,si;
 		cin >> ri >> si;
 		rows[ri]->disableSlot(si);
+		//rows[ri]->print();
 	}
 
 	vector<Server> servers = vector<Server>();
