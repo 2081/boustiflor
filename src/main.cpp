@@ -11,6 +11,8 @@ struct Server
 {
 	int size, capacity;
 	int pool;
+	int x;
+	int row = -1;
 	double score()
 	{
 		return capacity/(double)size;
@@ -130,6 +132,7 @@ int main(int argc, char** argv)
 	{
 		int zi,ci;
 		cin >> zi >> ci;
+		cerr << zi << " " << ci << endl;
 		servers.push_back(new Server(zi,ci));
 	}
 
@@ -176,30 +179,46 @@ int main(int argc, char** argv)
 		for(int j = 0; j < r->subRows.size(); ++j)
 		{
 			SubRow* sr = r->subRows[j];
+			int x = sr->x;
 			//cerr << sr->servers.size() << endl;
 			for( int k = 0; k < sr->servers.size(); ++k)
 			{
-				sr->servers[k]->pool = pool++;
+				Server* s = sr->servers[k];
+				s->pool = pool++;
 				pool %= POOL_NUMBER;
+				s->row = i;
+				s->x = x;
+				x += s->size;
 			}
 		}
 	}
 
-	for( int i = 0; i < ROW_NUMBER; ++i)
+	/*for( int i = 0; i < ROW_NUMBER; ++i)
 	{
 		Row* r = rows[i];
 		for(int j = 0; j < r->subRows.size(); ++j)
 		{
 			SubRow* sr = r->subRows[j];
 			int x = sr->x;
-			cerr << x << endl;
+			//cerr << x << endl;
 			//cerr << "servers : "<<sr->servers.size() << endl;
 			for( int k = 0; k < sr->servers.size(); ++k)
 			{
 				Server* s = sr->servers[k];
-				cout << r->id << " " << x << " " << s->pool << endl;
-				x += s->size;
+				//cout << r->id << " " << x << " " << s->pool << endl;
+				//cerr << x << " " << s->size << endl;
+				//x += s->size;
 			}
+		}
+	}*/
+
+	for( int i = 0; i < SERVER_NUMBER; ++i)
+	{
+		Server* s = servers[i];
+		if( s->row < 0){
+			cout << "x" << endl;
+		} else {
+			cout << s->row << " " << s->x << " " << s->pool << endl;	
 		}
 	}
 
