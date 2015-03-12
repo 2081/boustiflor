@@ -35,15 +35,29 @@ struct SubRow
 
 struct Row
 {
-	vector<SubRow> subRows;
+	vector<SubRow*> subRows;
 
 	Row(int size)
 	{
-		subRows.push_back(SubRow(size));
+		subRows.push_back(new SubRow(size));
 	}
 	void disableSlot(int x)
 	{
-		vector<SubRow>::iterator it = subRows.begin();
+		for(int i = 0; i < subRows.size(); ++i)
+		{
+			int size = subRows[i]->size;
+			int xx = subRows[i]->x;
+			if( xx <= x  &&  x < xx+size)
+			{
+				int s2 = size - (x+1-xx);
+
+				delete subRows[i];
+				subRows.erase(subRows.begin()+i);
+
+				subRows.insert(subRows.begin()+i, new SubRow( s2 ,x+1));
+				subRows.insert(subRows.begin()+i, new SubRow( size - s2 -1, xx));
+			}
+		}
 	}
 };
 
