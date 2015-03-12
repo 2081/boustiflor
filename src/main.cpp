@@ -106,6 +106,15 @@ int main(int argc, char** argv)
 
 	vector<Server> servers = vector<Server>();
 
+	//getting servers
+	for( int i = 0; i < SERVER_NUMBER; ++i)
+	{
+		int zi,ci;
+		cin >> zi >> ci;
+		servers.push_back(Server(zi,ci));
+	}
+
+
 	vector<Server> available_servers[ROW_SIZE];
 	// vector<Row> rows;
 	vector<SubRow> subrows = vector<SubRow>();
