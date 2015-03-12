@@ -10,6 +10,7 @@ struct Row;
 struct Server
 {
 	int size, capacity;
+	int pool;
 	double score()
 	{
 		return capacity/(double)size;
@@ -42,9 +43,10 @@ struct SubRow
 
 struct Row
 {
+	int id;
 	vector<SubRow*> subRows;
 
-	Row(int size)
+	Row(int fid, int size):id(fid)
 	{
 		subRows.push_back(new SubRow(size));
 	}
@@ -78,16 +80,17 @@ struct Row
 	}
 };
 
+
 int serv_alloc(Server* server, SubRow* subrow)
 {
-	if (server->size > subrow->available)
+	/*if (server->size > subrow->available)
 		cerr << "<ERR: Can't allocate a server in a smaller subrow." << endl; return -1;
 
 	subrow->servers.insert(server);
 	subrow-> available -= server->size;
 
 	// Returns 0 if the subrow is full
-	return subrow->available;
+	return subrow->available;*/
 }
 
 int main(int argc, char** argv)
@@ -104,7 +107,7 @@ int main(int argc, char** argv)
 	Row * rows[ROW_NUMBER];
 	for( int i = 0; i < ROW_NUMBER; ++i)
 	{
-		rows[i] = new Row(S);
+		rows[i] = new Row(i,S);
 	}
 
 	// Disabling unavailable slots
@@ -116,18 +119,18 @@ int main(int argc, char** argv)
 		//rows[ri]->print();
 	}
 
-	vector<Server> servers = vector<Server>();
+	vector<Server*> servers;
 
 	//getting servers
 	for( int i = 0; i < SERVER_NUMBER; ++i)
 	{
 		int zi,ci;
 		cin >> zi >> ci;
-		servers.push_back(Server(zi,ci));
+		servers.push_back(new Server(zi,ci));
 	}
 
 
-	vector<Server> available_servers[ROW_SIZE];
+	/*vector<Server> available_servers[ROW_SIZE];
 	// vector<Row> rows;
 	vector<SubRow> subrows = vector<SubRow>();
 
@@ -143,6 +146,37 @@ int main(int argc, char** argv)
 			{
 				if (serv_alloc(it_serv, it_subr) == 0)
 					subrows.erase(it_subr);
+			}
+		}
+	}
+*/
+	// Pools
+	int pool;
+
+	for( int i = 0; i < ROW_NUMBER; ++i)
+	{
+		Row* r = rows[i];
+		for(int j = 0; j < r->subRows.size(); ++j)
+		{
+			SubRow* sr = r->subRows[j];
+			for( int k = 0; k < sr->servers.size(); ++k)
+			{
+				sr->servers[k]->pool = pool++;
+				pool %= POOL_NUMBER;
+			}
+		}
+	}
+
+	for( int i = 0; i < ROW_NUMBER; ++i)
+	{
+		Row* r = rows[i];
+		for(int j = 0; j < r->subRows.size(); ++j)
+		{
+			SubRow* sr = r->subRows[j];
+			int x = sr->x;
+			for( int k = 0; k < sr->servers.size(); ++k)
+			{
+				cout << r->id << " " << endl;
 			}
 		}
 	}
